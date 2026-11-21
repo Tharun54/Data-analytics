@@ -1,0 +1,670 @@
+<title>CSE Plus</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: marketing page that becomes the product — every section previews a real piece of the portal. */
+:root {
+  --bg: #f4f6f5;
+  --surface: #ffffff;
+  --surface-2: #eaefec;
+  --ink: #0f1a17;
+  --ink-2: #4a5752;
+  --muted: #7b8782;
+  --line: #d8e0dc;
+  --accent: #0b7a55;        /* jade: operations, "on" */
+  --accent-ink: #ffffff;
+  --accent-soft: #d9efe5;
+  --ai: #5b4bd6;            /* violet: everything the AI says */
+  --ai-soft: #e8e5fb;
+  --good: #0a8a3a; --warn: #b26a00; --bad: #c43535;
+  --warn-soft: #fbefd9; --bad-soft: #f9e1e1;
+  --f-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --r: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0c1311; --surface: #141d1a; --surface-2: #1c2723; --ink: #eef3f1; --ink-2: #b4c1bc; --muted: #84918c;
+    --line: #26332e; --accent: #2fb985; --accent-ink: #04140d; --accent-soft: #143428; --ai: #9d92f2; --ai-soft: #231f45;
+    --good: #3cc46e; --warn: #e6a23c; --bad: #ef6b6b; --warn-soft: #33270f; --bad-soft: #3a1818; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0c1311; --surface: #141d1a; --surface-2: #1c2723; --ink: #eef3f1; --ink-2: #b4c1bc; --muted: #84918c;
+  --line: #26332e; --accent: #2fb985; --accent-ink: #04140d; --accent-soft: #143428; --ai: #9d92f2; --ai-soft: #231f45;
+  --good: #3cc46e; --warn: #e6a23c; --bad: #ef6b6b; --warn-soft: #33270f; --bad-soft: #3a1818; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { background: var(--bg); color: var(--ink); font: 16px/1.55 var(--f-body); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
+h1, h2, h3 { font-family: var(--f-display); line-height: 1.1; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+h1 { font-size: clamp(2.3rem, 5.4vw, 4.1rem); font-weight: 800; letter-spacing: -0.025em; }
+h2 { font-size: clamp(1.7rem, 3.2vw, 2.5rem); font-weight: 700; }
+h3 { font-size: 1.1rem; font-weight: 700; }
+p { margin: 0; }
+a { color: inherit; }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.eyebrow { font: 600 0.75rem/1 var(--f-body); letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+.lede { font-size: 1.15rem; color: var(--ink-2); max-width: 60ch; }
+.mono { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 999px; border: 1px solid transparent; font-weight: 600; cursor: pointer; text-decoration: none; background: var(--accent); color: var(--accent-ink); transition: transform .15s; }
+.btn:hover { transform: translateY(-1px); }
+.btn.ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+.btn.sm { padding: 7px 14px; font-size: 0.9rem; }
+
+/* header */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 9; background: color-mix(in srgb, var(--surface) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+.top .wrap { display: flex; align-items: center; gap: 24px; padding-block: 12px; }
+.brand { display: flex; align-items: center; gap: 10px; font: 800 1.2rem var(--f-display); text-decoration: none; }
+.mark { width: 30px; height: 30px; border-radius: 9px; background: var(--ink); color: var(--bg); display: grid; place-items: center; font-size: 0.85rem; }
+.links { display: flex; gap: 22px; flex: 1; }
+.links a { text-decoration: none; color: var(--ink-2); font-weight: 500; }
+.links a:hover { color: var(--ink); }
+.top-actions { display: flex; gap: 8px; align-items: center; }
+.icon-btn { width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--line); background: transparent; cursor: pointer; display: grid; place-items: center; }
+
+/* hero */
+.hero { padding-block: 64px 40px; }
+.hero .wrap { display: grid; grid-template-columns: 1.05fr 1fr; gap: 48px; align-items: center; }
+.hero h1 em { font-style: normal; color: var(--accent); }
+.hero .lede { margin-top: 20px; }
+.hero .cta { display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap; }
+.hero .fine { margin-top: 16px; color: var(--muted); font-size: 0.9rem; }
+.mini { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 18px; box-shadow: 0 30px 60px -30px rgba(15, 26, 23, .35); display: grid; gap: 12px; min-width: 0; }
+.mini-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--muted); }
+.live { display: inline-flex; align-items: center; gap: 6px; color: var(--good); font-weight: 600; }
+.live::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--good); animation: pulse 2s infinite; }
+@keyframes pulse { 50% { opacity: .35; } }
+.tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.tile { background: var(--surface-2); border-radius: 12px; padding: 12px; }
+.tile .k { font-size: 0.78rem; color: var(--ink-2); }
+.tile .v { font: 700 1.6rem/1.2 var(--f-display); font-variant-numeric: tabular-nums; }
+.tile .d { font-size: 0.78rem; font-weight: 600; }
+.up { color: var(--good); } .down { color: var(--bad); }
+.punch { display: grid; gap: 6px; }
+.punch-row { display: grid; grid-template-columns: 30px 1fr auto auto; gap: 10px; align-items: center; font-size: 0.9rem; padding: 6px 0; border-top: 1px solid var(--line); }
+.av { width: 30px; height: 30px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font-size: 0.75rem; font-weight: 700; }
+.chip { display: inline-flex; align-items: center; gap: 5px; font-size: 0.75rem; font-weight: 600; padding: 3px 9px; border-radius: 99px; background: var(--surface-2); color: var(--ink-2); white-space: nowrap; }
+.chip.ok { background: var(--accent-soft); color: var(--accent); }
+.chip.late { background: var(--warn-soft); color: var(--warn); }
+.chip.abs { background: var(--bad-soft); color: var(--bad); }
+.ai-card { background: var(--ai-soft); border-radius: 12px; padding: 12px 14px; display: grid; grid-template-columns: auto 1fr; gap: 10px; font-size: 0.9rem; }
+.ai-dot { width: 26px; height: 26px; border-radius: 8px; background: var(--ai); color: #fff; display: grid; place-items: center; font: 700 0.7rem var(--f-mono); }
+.ai-card strong { color: var(--ai); }
+
+/* strip */
+.strip { border-block: 1px solid var(--line); background: var(--surface); }
+.strip .wrap { display: flex; gap: 32px; padding-block: 18px; flex-wrap: wrap; justify-content: space-between; color: var(--ink-2); font-size: 0.95rem; }
+.strip b { font-family: var(--f-display); color: var(--ink); font-size: 1.15rem; margin-right: 6px; }
+
+section.band { padding-block: 88px; }
+.sec-head { display: grid; gap: 14px; margin-bottom: 40px; max-width: 760px; }
+
+/* builder */
+.builder { display: grid; grid-template-columns: 1fr 340px; gap: 28px; align-items: start; }
+.cats { display: grid; gap: 22px; min-width: 0; }
+.cat h3 { display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px; }
+.cat h3 small { font: 500 0.85rem var(--f-body); color: var(--muted); }
+.mods { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+.mod { text-align: left; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px; cursor: pointer; display: grid; gap: 4px; position: relative; transition: border-color .15s, background .15s; }
+.mod:hover { border-color: var(--ink-2); }
+.mod .name { font-weight: 700; padding-right: 28px; }
+.mod .desc { font-size: 0.85rem; color: var(--ink-2); }
+.mod .price { font: 500 0.8rem var(--f-mono); color: var(--muted); margin-top: 4px; }
+.mod .tick { position: absolute; top: 12px; right: 12px; width: 22px; height: 22px; border-radius: 6px; border: 1.5px solid var(--line); display: grid; place-items: center; font-size: 0.8rem; color: transparent; }
+.mod[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.mod[aria-pressed="true"] .tick { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.mod.ai[aria-pressed="true"] { border-color: var(--ai); background: var(--ai-soft); }
+.mod.ai[aria-pressed="true"] .tick { background: var(--ai); border-color: var(--ai); color: #fff; }
+.summary { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 80px); background: var(--ink); color: var(--bg); border-radius: 18px; padding: 22px; display: grid; gap: 14px; }
+.summary .muted { color: color-mix(in srgb, var(--bg) 65%, transparent); font-size: 0.9rem; }
+.summary .total { font: 800 2.4rem/1 var(--f-display); font-variant-numeric: tabular-nums; }
+.summary input[type=range] { width: 100%; accent-color: var(--accent); }
+.summary .picked { display: flex; flex-wrap: wrap; gap: 6px; }
+.summary .picked span { font-size: 0.78rem; padding: 3px 8px; border-radius: 99px; background: color-mix(in srgb, var(--bg) 14%, transparent); }
+.summary .btn { justify-content: center; }
+.presets { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; align-items: center; }
+.preset { border: 1px solid var(--line); background: var(--surface); padding: 7px 14px; border-radius: 99px; cursor: pointer; font-weight: 500; font-size: 0.9rem; }
+.preset[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+/* AI */
+.ai-band { background: var(--surface); border-block: 1px solid var(--line); }
+.ai-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 14px; }
+.insight { border: 1px solid var(--line); border-radius: var(--r); padding: 18px; display: grid; gap: 10px; align-content: start; background: var(--bg); }
+.insight .kind { font: 600 0.72rem var(--f-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ai); }
+.insight p { color: var(--ink-2); font-size: 0.95rem; }
+.insight .act { font-size: 0.85rem; font-weight: 600; color: var(--ink); border-top: 1px dashed var(--line); padding-top: 10px; }
+.ask { margin-top: 28px; display: grid; gap: 12px; max-width: 820px; }
+.ask-q { align-self: end; justify-self: end; background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 16px 16px 4px 16px; max-width: 90%; }
+.ask-a { background: var(--ai-soft); padding: 14px 18px; border-radius: 16px 16px 16px 4px; max-width: 95%; color: var(--ink); }
+.ask-a b { color: var(--ai); }
+
+/* steps */
+.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 24px; counter-reset: s; }
+.step { display: grid; gap: 8px; align-content: start; }
+.step::before { counter-increment: s; content: "Step " counter(s); font: 600 0.8rem var(--f-mono); color: var(--accent); }
+.step p { color: var(--ink-2); }
+
+/* data */
+.data-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 16px; }
+.data-card { border: 1px solid var(--line); border-radius: var(--r); padding: 22px; background: var(--surface); display: grid; gap: 10px; align-content: start; }
+.data-card ul { margin: 0; padding-left: 18px; color: var(--ink-2); display: grid; gap: 4px; }
+.data-card.feat { border-color: var(--ink); }
+
+/* pricing */
+.prices { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 16px; }
+.price-card { border: 1px solid var(--line); border-radius: 18px; padding: 24px; background: var(--surface); display: grid; gap: 12px; align-content: start; }
+.price-card .amt { font: 800 2.2rem/1 var(--f-display); }
+.price-card .amt small { font: 500 0.9rem var(--f-body); color: var(--muted); }
+.price-card ul { margin: 0; padding-left: 18px; color: var(--ink-2); display: grid; gap: 6px; }
+.price-card.pop { border: 2px solid var(--accent); }
+
+footer { border-top: 1px solid var(--line); padding-block: 32px; color: var(--muted); font-size: 0.9rem; }
+footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+/* signup */
+.signup { padding-block: 48px 80px; }
+.signup-card { max-width: 980px; margin: 0 auto; background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: clamp(20px, 4vw, 40px); display: grid; gap: 24px; }
+.progress { display: flex; gap: 8px; }
+.progress span { flex: 1; height: 4px; border-radius: 4px; background: var(--line); }
+.progress span.on { background: var(--accent); }
+.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 16px; }
+label { display: grid; gap: 6px; font-size: 0.9rem; font-weight: 600; color: var(--ink-2); }
+input[type=text], input[type=email], input[type=number], select { padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); width: 100%; }
+.signup-foot { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+/* portal */
+.portal { display: grid; grid-template-columns: 240px 1fr; min-height: calc(100vh - 64px); }
+.side { border-right: 1px solid var(--line); background: var(--surface); padding: 18px 12px; display: grid; align-content: start; gap: 4px; }
+.side .grp { font: 600 0.7rem var(--f-body); letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 14px 10px 4px; }
+.side button { text-align: left; border: 0; background: transparent; padding: 9px 10px; border-radius: 9px; cursor: pointer; font-weight: 500; color: var(--ink-2); display: flex; justify-content: space-between; align-items: center; }
+.side button:hover { background: var(--surface-2); color: var(--ink); }
+.side button.on { background: var(--accent-soft); color: var(--accent); font-weight: 700; }
+.side button.ai-link.on { background: var(--ai-soft); color: var(--ai); }
+.side .add { margin-top: 12px; border: 1px dashed var(--line); justify-content: center; color: var(--ink); }
+.main { padding: 24px max(16px, env(safe-area-inset-right, 0px)) 48px 24px; min-width: 0; display: grid; gap: 18px; align-content: start; }
+.main-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+.main-head p { color: var(--muted); font-size: 0.9rem; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 18px; min-width: 0; }
+.panel h3 { margin-bottom: 12px; }
+.row2 { display: grid; grid-template-columns: 1.4fr 1fr; gap: 18px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; }
+.kpi { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 16px; }
+.kpi .k { color: var(--ink-2); font-size: 0.85rem; }
+.kpi .v { font: 700 1.9rem/1.2 var(--f-display); font-variant-numeric: tabular-nums; }
+.kpi .d { font-size: 0.8rem; font-weight: 600; }
+.tbl-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+th { text-align: left; font-weight: 600; color: var(--muted); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+td { padding: 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+td.num { font-variant-numeric: tabular-nums; font-family: var(--f-mono); font-size: 0.85rem; }
+.kanban { display: grid; grid-template-columns: repeat(4, minmax(200px, 1fr)); gap: 12px; overflow-x: auto; }
+.col { background: var(--surface-2); border-radius: 12px; padding: 10px; display: grid; gap: 8px; align-content: start; }
+.col h4 { margin: 0 0 4px; font-size: 0.85rem; display: flex; justify-content: space-between; }
+.deal { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 10px; font-size: 0.88rem; display: grid; gap: 4px; }
+.deal .amt { font-family: var(--f-mono); font-size: 0.8rem; color: var(--ink-2); }
+.checklist { display: grid; gap: 2px; }
+.check { display: flex; gap: 10px; align-items: center; padding: 10px 4px; border-bottom: 1px solid var(--line); cursor: pointer; }
+.check input { width: 18px; height: 18px; accent-color: var(--accent); }
+.check.done span { text-decoration: line-through; color: var(--muted); }
+.chart svg { width: 100%; height: auto; display: block; }
+.chart text { fill: var(--muted); font: 11px var(--f-body); }
+.chart .bar { fill: var(--accent); }
+.chart .bar.low { fill: var(--warn); }
+.chart .bar:hover { opacity: .8; }
+.chart .grid { stroke: var(--line); }
+.feed { display: grid; gap: 10px; }
+.empty-mod { display: grid; gap: 10px; place-items: start; padding: 28px; }
+.sample-note { font-size: 0.8rem; color: var(--warn); background: var(--warn-soft); padding: 4px 10px; border-radius: 99px; font-weight: 600; }
+.toast { position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 10px 18px; border-radius: 10px; font-weight: 500; z-index: 20; }
+
+@media (max-width: 960px) {
+  .hero .wrap, .builder, .row2 { grid-template-columns: 1fr; }
+  .summary { position: static; }
+  .links { display: none; }
+}
+@media (max-width: 760px) {
+  .portal { grid-template-columns: 1fr; }
+  .side { border-right: 0; border-bottom: 1px solid var(--line); display: flex; overflow-x: auto; gap: 6px; padding: 10px max(16px, env(safe-area-inset-right, 0px)) 10px max(16px, env(safe-area-inset-left, 0px)); }
+  .side .grp { display: none; }
+  .side button { white-space: nowrap; flex: none; }
+  .side .add { margin-top: 0; }
+  .main { padding-left: max(16px, env(safe-area-inset-left, 0px)); }
+  .tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .tile .v { font-size: 1.25rem; }
+  .top .wrap { gap: 10px; }
+  .top-actions .ghost { display: none; }
+  section.band { padding-block: 56px; }
+}
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#home"><span class="mark">C+</span>CSE Plus</a>
+    <nav class="links" id="links">
+      <a href="#home" data-scroll="modules">Modules</a>
+      <a href="#home" data-scroll="ai">AI advisor</a>
+      <a href="#home" data-scroll="data">Your data</a>
+      <a href="#home" data-scroll="pricing">Pricing</a>
+    </nav>
+    <div class="top-actions">
+      <button class="icon-btn" id="theme" type="button" aria-label="Switch light or dark theme">◑</button>
+      <a class="btn ghost sm" href="#portal">Live demo</a>
+      <a class="btn sm" href="#signup">Start free</a>
+    </div>
+  </div>
+</header>
+
+<main id="view-home">
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <p class="eyebrow">One portal for the whole business</p>
+        <h1 style="margin-top:14px">Attendance, sales, daily ops and an <em>AI advisor</em>. Switch on only what you need.</h1>
+        <p class="lede">CSE Plus gives every company its own portal. Pick modules at signup, add more the day you need them, and get a weekly AI report on what is going wrong and what to do next.</p>
+        <div class="cta">
+          <a class="btn" href="#signup">Build my portal</a>
+          <a class="btn ghost" href="#portal">See the live demo</a>
+        </div>
+        <p class="fine">Free for up to 5 employees · No credit card · Works on any phone</p>
+      </div>
+      <div class="mini" aria-label="Preview of the portal home screen">
+        <div class="mini-head"><span>Sharma Retail · Today, Fri 21 Nov</span><span class="live">Live</span></div>
+        <div class="tiles">
+          <div class="tile"><div class="k">Present</div><div class="v">42<small style="font-size:.9rem;color:var(--muted)">/48</small></div><div class="d up">87.5%</div></div>
+          <div class="tile"><div class="k">Late</div><div class="v">5</div><div class="d down">+2 vs avg</div></div>
+          <div class="tile"><div class="k">Sales today</div><div class="v">₹1.8L</div><div class="d up">+12%</div></div>
+        </div>
+        <div class="punch">
+          <div class="punch-row"><span class="av">PK</span><span>Priya K. · Andheri store</span><span class="mono" style="font-size:.8rem">09:02</span><span class="chip ok">On time</span></div>
+          <div class="punch-row"><span class="av">AM</span><span>Arjun M. · Bandra store</span><span class="mono" style="font-size:.8rem">09:41</span><span class="chip late">Late 41m</span></div>
+          <div class="punch-row"><span class="av">RS</span><span>Rohit S. · Field sales</span><span class="mono" style="font-size:.8rem">—</span><span class="chip abs">Absent</span></div>
+        </div>
+        <div class="ai-card"><span class="ai-dot">AI</span><span><strong>Heads up:</strong> the Powai closing checklist was skipped 4 times this month, and those days show 18% higher stock variance.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="strip"><div class="wrap">
+    <span><b>19</b>modules in 5 categories</span>
+    <span><b>1</b>login for owner, managers and staff</span>
+    <span><b>GPS · selfie · QR</b>check-in</span>
+    <span><b>Weekly</b>AI business report</span>
+  </div></div>
+
+  <section class="band" id="modules">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Build your portal</p>
+        <h2>Pick your industry, then switch modules on and off.</h2>
+        <p class="lede">This is the exact picker your customers see at signup. Everything you choose here carries into the live demo.</p>
+      </div>
+      <div class="presets" id="presets" role="group" aria-label="Industry presets"></div>
+      <div class="builder">
+        <div class="cats" id="cats"></div>
+        <aside class="summary" aria-live="polite">
+          <div class="muted">Your monthly estimate</div>
+          <div class="total" id="total">₹0</div>
+          <div class="muted" id="total-note"></div>
+          <label style="color:inherit">Team size: <span id="emp-val" class="mono">40</span> employees
+            <input type="range" id="emp" min="5" max="300" step="5" value="40">
+          </label>
+          <div class="picked" id="picked"></div>
+          <a class="btn" href="#portal">Open this portal in the demo</a>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="band ai-band" id="ai">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow" style="color:var(--ai)">AI advisor</p>
+        <h2>It reads every module you use and tells you what to fix.</h2>
+        <p class="lede">The more modules a company switches on, the more the AI can connect: attendance with sales, checklists with stock, leave with weekend staffing.</p>
+      </div>
+      <div class="ai-grid">
+        <article class="insight"><span class="kind">Current mistake</span><h3>Checklists skipped at Powai</h3><p>Closing checklist missed 4 times in November. Stock variance on those days averaged 18% above normal.</p><span class="act">Suggested: make the checklist mandatory before staff can check out.</span></article>
+        <article class="insight"><span class="kind">Prediction</span><h3>Saturday shortfall at Bandra</h3><p>Based on 6 weeks of leave and attendance patterns, Bandra will be 2 people short this Saturday.</p><span class="act">Suggested: move 1 person from Andheri, which is overstaffed Tue–Thu.</span></article>
+        <article class="insight"><span class="kind">People risk</span><h3>Early signs someone may quit</h3><p>Arjun M. was late 7 of the last 10 days, up from once a month, and has stopped taking overtime.</p><span class="act">Suggested: a one-to-one check-in this week.</span></article>
+        <article class="insight"><span class="kind">Sales</span><h3>₹3.4L pipeline going cold</h3><p>12 leads have had no follow-up for 5+ days. Two of them are your largest open quotes.</p><span class="act">Suggested: assign them to Neha, who closes 31% of follow-ups.</span></article>
+      </div>
+      <div class="ask" aria-label="Example question to the AI advisor">
+        <div class="ask-q">Why did sales drop last week?</div>
+        <div class="ask-a"><b>Two reasons.</b> Your two best salespeople were on leave Tuesday to Thursday, and lead follow-ups fell 35% while they were out. Walk-in sales held steady, so the drop came from field sales. Next time, reassign their leads before leave starts. I can set that up as an automatic rule.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">How it works</p><h2>Live in an afternoon.</h2></div>
+      <div class="steps">
+        <div class="step"><h3>Sign up and pick modules</h3><p>Tell us your industry and team size. We pre-select what similar businesses use; change anything.</p></div>
+        <div class="step"><h3>Invite your team</h3><p>Import employees from Excel or add them one by one. Staff check in from their phone with GPS, selfie or a QR code at the door.</p></div>
+        <div class="step"><h3>Run the business</h3><p>Managers see attendance, tasks and sales live. Add a module from inside the portal whenever you need it, with a 14-day free trial.</p></div>
+        <div class="step"><h3>Get your AI report</h3><p>Every Monday: what went wrong, what is likely to happen next, and three things to do this week.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band ai-band" id="data">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Your data, your database</p>
+        <h2>Every company's data is walled off. Enterprises can have their own database.</h2>
+      </div>
+      <div class="data-grid">
+        <div class="data-card"><h3>Isolated by default</h3><ul><li>Every record is locked to your company at the database level</li><li>Encrypted in transit and at rest</li><li>Daily backups, export everything any time</li></ul></div>
+        <div class="data-card"><h3>Build your own tables</h3><ul><li>The Custom database module lets you create tables and forms for anything we don't cover</li><li>Vendor lists, site inspections, warranty claims</li><li>The AI reads these too</li></ul></div>
+        <div class="data-card feat"><h3>Dedicated database (Enterprise)</h3><ul><li>Your own separate database instance</li><li>Choose the hosting region</li><li>Single sign-on, audit log, custom data retention</li></ul></div>
+        <div class="data-card"><h3>Fair employee tracking</h3><ul><li>Location only during working hours, with consent</li><li>Staff can see their own records</li><li>Built for India's DPDP Act 2023</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="pricing">
+    <div class="wrap">
+      <div class="sec-head"><p class="eyebrow">Pricing</p><h2>Pay per employee, only for modules you switch on.</h2><p class="lede">Prices per employee per month. Bundles of 5+ paid modules get 15% off automatically.</p></div>
+      <div class="prices">
+        <div class="price-card"><h3>Starter</h3><div class="amt">₹0</div><ul><li>Up to 5 employees</li><li>Any 3 modules</li><li>Basic AI alerts</li></ul><a class="btn ghost" href="#signup">Start free</a></div>
+        <div class="price-card pop"><h3>Growth</h3><div class="amt">₹10–40 <small>/ module / employee</small></div><ul><li>Unlimited employees and modules</li><li>Full AI advisor and weekly report</li><li>Mobile check-in, GPS geofences</li><li>Email and chat support</li></ul><a class="btn" href="#signup">Build my portal</a></div>
+        <div class="price-card"><h3>Enterprise</h3><div class="amt">Custom</div><ul><li>Dedicated database and region</li><li>Single sign-on, audit log</li><li>Custom modules and integrations</li><li>Named account manager</li></ul><a class="btn ghost" href="#signup">Talk to us</a></div>
+      </div>
+    </div>
+  </section>
+
+  <footer><div class="wrap"><span>© 2026 CSE Plus · Preview build. Figures on this page are sample data.</span><span>Made for Indian SMBs, from 5 to 500 people.</span></div></footer>
+</main>
+
+<main id="view-signup" hidden>
+  <section class="signup"><div class="wrap">
+    <form class="signup-card" id="signup-form" novalidate>
+      <div class="progress"><span class="on" id="p1"></span><span id="p2"></span><span id="p3"></span></div>
+      <div id="s1" class="step-pane" style="display:grid;gap:20px">
+        <div><p class="eyebrow">Step 1 of 3</p><h2 style="margin-top:8px">Tell us about your business</h2></div>
+        <div class="form-grid">
+          <label for="f-company">Company name<input type="text" id="f-company" value="Sharma Retail"></label>
+          <label for="f-name">Your name<input type="text" id="f-name" value="Anil Sharma"></label>
+          <label for="f-email">Work email<input type="email" id="f-email" value="anil@sharmaretail.in"></label>
+          <label for="f-industry">Industry<select id="f-industry"></select></label>
+          <label for="f-size">Number of employees<input type="number" id="f-size" min="1" value="48"></label>
+          <label for="f-branches">Branches or sites<input type="number" id="f-branches" min="1" value="3"></label>
+        </div>
+      </div>
+      <div id="s2" class="step-pane" hidden style="display:grid;gap:20px">
+        <div><p class="eyebrow">Step 2 of 3</p><h2 style="margin-top:8px">Choose your modules</h2><p class="lede" style="margin-top:8px">We picked what <span id="ind-name"></span> businesses usually start with. Change anything; you can add more later from inside the portal.</p></div>
+        <div class="cats" id="cats-signup"></div>
+      </div>
+      <div id="s3" class="step-pane" hidden style="display:grid;gap:20px">
+        <div><p class="eyebrow">Step 3 of 3</p><h2 style="margin-top:8px">Your portal is ready</h2></div>
+        <div class="data-grid" id="review"></div>
+      </div>
+      <div class="signup-foot">
+        <button type="button" class="btn ghost" id="back">Back</button>
+        <span class="mono" style="color:var(--muted);font-size:.9rem" id="signup-total"></span>
+        <button type="submit" class="btn" id="next">Continue</button>
+      </div>
+    </form>
+  </div></section>
+</main>
+
+<main id="view-portal" hidden>
+  <div class="portal">
+    <nav class="side" id="side" aria-label="Portal modules"></nav>
+    <div class="main" id="main"></div>
+  </div>
+</main>
+
+<div class="toast" id="toast" hidden role="status"></div>
+
+<script>
+"use strict";
+const CATS = [
+  { id: "people", name: "People", hint: "your team", mods: [
+    { id: "employees", name: "Employees", desc: "Directory, documents, roles", price: 0, core: true },
+    { id: "attendance", name: "Attendance", desc: "GPS, selfie and QR check-in", price: 29 },
+    { id: "shifts", name: "Shifts & rosters", desc: "Weekly rosters, swaps, overtime", price: 15 },
+    { id: "leave", name: "Leave", desc: "Requests, balances, holidays", price: 10 },
+    { id: "payroll", name: "Payroll", desc: "Salary, PF, ESI, TDS, payslips", price: 40, soon: true },
+    { id: "performance", name: "Performance", desc: "Goals, reviews, feedback", price: 20 } ] },
+  { id: "ops", name: "Operations", hint: "day-to-day work", mods: [
+    { id: "tasks", name: "Tasks", desc: "Assign, track, due dates", price: 10 },
+    { id: "checklists", name: "Daily checklists", desc: "Opening, closing, cleaning, audits", price: 15 },
+    { id: "approvals", name: "Approvals", desc: "Purchase, discount and leave sign-offs", price: 10 },
+    { id: "expenses", name: "Expenses", desc: "Claims with bill photos", price: 15 },
+    { id: "inventory", name: "Inventory", desc: "Stock by branch, low-stock alerts", price: 25 },
+    { id: "assets", name: "Assets", desc: "Laptops, vehicles, equipment", price: 10 } ] },
+  { id: "sales", name: "Sales & customers", hint: "revenue", mods: [
+    { id: "crm", name: "CRM", desc: "Leads, pipeline, follow-ups", price: 30 },
+    { id: "visits", name: "Field visits", desc: "Visit plans, check-ins at client sites", price: 20 },
+    { id: "invoices", name: "Quotes & invoices", desc: "GST-ready quotes and invoices", price: 20 },
+    { id: "tickets", name: "Support tickets", desc: "Complaints and service requests", price: 20 } ] },
+  { id: "data", name: "Data", hint: "your own records", mods: [
+    { id: "customdb", name: "Custom database", desc: "Build your own tables and forms", price: 25 },
+    { id: "reports", name: "Reports & dashboards", desc: "Charts across every module", price: 15 },
+    { id: "import", name: "Data import", desc: "Bring data from Excel or Tally", price: 0 } ] },
+  { id: "ai", name: "AI", hint: "works across everything", mods: [
+    { id: "ai", name: "AI advisor", desc: "Mistakes, predictions, suggestions, weekly report", price: 25, ai: true } ] },
+];
+const MODS = Object.fromEntries(CATS.flatMap(c => c.mods.map(m => [m.id, { ...m, cat: c.id }])));
+const PRESETS = {
+  retail: { name: "Retail & restaurants", mods: ["employees", "attendance", "shifts", "leave", "checklists", "inventory", "tasks", "ai"] },
+  field: { name: "Field sales & service", mods: ["employees", "attendance", "leave", "visits", "crm", "invoices", "expenses", "ai"] },
+  clinic: { name: "Clinics & healthcare", mods: ["employees", "attendance", "shifts", "leave", "tickets", "crm", "ai"] },
+  office: { name: "Offices & agencies", mods: ["employees", "attendance", "leave", "tasks", "approvals", "crm", "performance", "ai"] },
+  factory: { name: "Factories & workshops", mods: ["employees", "attendance", "shifts", "leave", "inventory", "assets", "checklists", "ai"] },
+};
+const state = { preset: "retail", picked: new Set(PRESETS.retail.mods), employees: 40, company: "Sharma Retail", step: 1, page: "home" };
+
+const $ = (s, r = document) => r.querySelector(s);
+const inr = n => "₹" + Math.round(n).toLocaleString("en-IN");
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+function toast(msg) { const t = $("#toast"); t.textContent = msg; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => (t.hidden = true), 2600); }
+
+function cost(picked = state.picked, n = state.employees) {
+  const paid = [...picked].filter(id => MODS[id].price > 0 && !MODS[id].soon);
+  const sub = paid.reduce((s, id) => s + MODS[id].price, 0) * n;
+  const disc = paid.length >= 5 ? 0.15 : 0;
+  return { sub, disc, total: n <= 5 && paid.length <= 3 ? 0 : sub * (1 - disc), paid: paid.length };
+}
+
+// ---------- module picker (shared by landing + signup) ----------
+function renderCats(root) {
+  root.innerHTML = CATS.map(c => `<div class="cat"><h3>${c.name} <small>${c.hint}</small></h3><div class="mods">${c.mods.map(m => `
+    <button type="button" class="mod${m.ai ? " ai" : ""}" data-mod="${m.id}" aria-pressed="${state.picked.has(m.id)}"${m.core ? ' title="Included in every portal"' : ""}>
+      <span class="tick">✓</span><span class="name">${m.name}${m.soon ? ' <span class="chip late">Coming soon</span>' : ""}</span><span class="desc">${m.desc}</span>
+      <span class="price">${m.core ? "Always included" : m.price ? inr(m.price) + " / employee / mo" : "Free"}</span>
+    </button>`).join("")}</div></div>`).join("");
+}
+function syncPicker() {
+  document.querySelectorAll("[data-mod]").forEach(b => b.setAttribute("aria-pressed", state.picked.has(b.dataset.mod)));
+  document.querySelectorAll("[data-preset]").forEach(b => b.setAttribute("aria-pressed", b.dataset.preset === state.preset));
+  const c = cost();
+  $("#total").textContent = inr(c.total);
+  $("#total-note").textContent = c.total === 0 ? "Free: up to 5 employees and 3 modules" :
+    `${c.paid} paid modules × ${state.employees} employees${c.disc ? " · 15% bundle discount applied" : ""}`;
+  $("#emp-val").textContent = state.employees;
+  $("#picked").innerHTML = [...state.picked].map(id => `<span>${MODS[id].name}</span>`).join("");
+  const s = cost(state.picked, state.employees);
+  $("#signup-total").textContent = `${state.picked.size} modules · ${inr(s.total)}/mo`;
+}
+document.addEventListener("click", e => {
+  const m = e.target.closest("[data-mod]");
+  if (m) {
+    const id = m.dataset.mod;
+    if (MODS[id].core) { toast("Employees is included in every portal"); return; }
+    state.picked.has(id) ? state.picked.delete(id) : state.picked.add(id);
+    state.preset = null; syncPicker(); return;
+  }
+  const p = e.target.closest("[data-preset]");
+  if (p) { state.preset = p.dataset.preset; state.picked = new Set(PRESETS[p.dataset.preset].mods); syncPicker(); return; }
+  const sc = e.target.closest("[data-scroll]");
+  if (sc) { e.preventDefault(); show("home"); document.getElementById(sc.dataset.scroll).scrollIntoView({ behavior: "smooth" }); }
+});
+$("#presets").innerHTML = '<span style="color:var(--muted);font-size:.9rem;margin-right:4px">Industry:</span>' +
+  Object.entries(PRESETS).map(([k, p]) => `<button type="button" class="preset" data-preset="${k}">${p.name}</button>`).join("");
+$("#emp").addEventListener("input", e => { state.employees = +e.target.value; syncPicker(); });
+
+// ---------- signup ----------
+$("#f-industry").innerHTML = Object.entries(PRESETS).map(([k, p]) => `<option value="${k}">${p.name}</option>`).join("");
+function setStep(n) {
+  state.step = n;
+  [1, 2, 3].forEach(i => { $("#s" + i).hidden = i !== n; $("#p" + i).classList.toggle("on", i <= n); });
+  $("#back").style.visibility = n === 1 ? "hidden" : "visible";
+  $("#next").textContent = n === 3 ? "Open my portal" : "Continue";
+  if (n === 2) { $("#ind-name").textContent = PRESETS[$("#f-industry").value].name.toLowerCase(); renderCats($("#cats-signup")); syncPicker(); }
+  if (n === 3) {
+    const c = cost();
+    const byCat = CATS.map(cat => ({ cat, mods: cat.mods.filter(m => state.picked.has(m.id)) })).filter(x => x.mods.length);
+    $("#review").innerHTML = byCat.map(x => `<div class="data-card"><h3>${x.cat.name}</h3><ul>${x.mods.map(m => `<li>${m.name}</li>`).join("")}</ul></div>`).join("") +
+      `<div class="data-card feat"><h3>${esc(state.company)}</h3><ul><li>${state.employees} employees</li><li>${inr(c.total)} per month after a 14-day trial</li><li>Add or remove modules any time</li></ul></div>`;
+  }
+}
+$("#signup-form").addEventListener("submit", e => {
+  e.preventDefault();
+  if (state.step === 1) {
+    if (!$("#f-company").value.trim()) { toast("Enter your company name to continue"); return; }
+    state.company = $("#f-company").value.trim();
+    state.employees = Math.max(1, +$("#f-size").value || 1);
+    state.preset = $("#f-industry").value;
+    state.picked = new Set(PRESETS[state.preset].mods);
+    $("#emp").value = Math.min(300, Math.max(5, state.employees));
+    setStep(2);
+  } else if (state.step === 2) setStep(3);
+  else { location.hash = "portal"; toast(`Welcome to your portal, ${state.company}`); }
+});
+$("#back").addEventListener("click", () => setStep(Math.max(1, state.step - 1)));
+
+// ---------- portal (sample data) ----------
+const PEOPLE = [
+  ["Priya Kulkarni", "Andheri", "09:02", "ok"], ["Arjun Mehta", "Bandra", "09:41", "late"], ["Rohit Sawant", "Field", "—", "abs"],
+  ["Neha Iyer", "Powai", "08:55", "ok"], ["Farhan Shaikh", "Andheri", "09:00", "ok"], ["Kavya Nair", "Bandra", "09:18", "late"],
+  ["Sanjay Patil", "Powai", "08:49", "ok"], ["Meera Joshi", "Andheri", "—", "leave"],
+];
+const WEEK = [["Sat", 91], ["Sun", 84], ["Mon", 93], ["Tue", 95], ["Wed", 94], ["Thu", 90], ["Fri", 87.5]];
+const SCREENS = {
+  home: { name: "Home" },
+  employees: { name: "Employees" }, attendance: { name: "Attendance" }, crm: { name: "CRM" },
+  tasks: { name: "Tasks" }, checklists: { name: "Daily checklists" }, ai: { name: "AI advisor" },
+};
+let screen = "home";
+const statusChip = s => ({ ok: '<span class="chip ok">On time</span>', late: '<span class="chip late">Late</span>', abs: '<span class="chip abs">Absent</span>', leave: '<span class="chip">On leave</span>' }[s]);
+
+function weekChart() {
+  const W = 520, H = 200, L = 34, B = 26, T = 10, max = 100, min = 70;
+  const y = v => T + (H - T - B) * (1 - (v - min) / (max - min));
+  const bw = (W - L) / WEEK.length;
+  const grid = [70, 80, 90, 100].map(v => `<line class="grid" x1="${L}" x2="${W}" y1="${y(v)}" y2="${y(v)}"/><text x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${v}%</text>`).join("");
+  const bars = WEEK.map(([d, v], i) => {
+    const x = L + i * bw + bw * 0.22, w = bw * 0.56;
+    return `<rect class="bar${v < 88 ? " low" : ""}" x="${x}" y="${y(v)}" width="${w}" height="${y(min) - y(v)}" rx="4"><title>${d}: ${v}% present</title></rect>
+      <text x="${x + w / 2}" y="${H - 8}" text-anchor="middle">${d}</text>`;
+  }).join("");
+  return `<div class="chart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Attendance percentage over the last 7 days">${grid}${bars}</svg></div>`;
+}
+const attendanceTable = (rows = PEOPLE) => `<div class="tbl-wrap"><table><thead><tr><th>Employee</th><th>Branch</th><th>Check-in</th><th>Method</th><th>Status</th></tr></thead><tbody>
+  ${rows.map(([n, b, t, s], i) => `<tr><td>${n}</td><td>${b}</td><td class="num">${t}</td><td>${t === "—" ? "—" : ["GPS", "Selfie", "QR"][i % 3]}</td><td>${statusChip(s)}</td></tr>`).join("")}</tbody></table></div>`;
+const aiFeed = (limit) => {
+  const items = [
+    ["Current mistake", "Powai closing checklist skipped 4 times this month; stock variance 18% higher on those days.", "checklists"],
+    ["Prediction", "Bandra will be 2 people short this Saturday based on leave patterns.", "shifts"],
+    ["People risk", "Arjun M. late 7 of the last 10 days, up from once a month.", "attendance"],
+    ["Sales", "12 leads with no follow-up for 5+ days; ₹3.4L pipeline at risk.", "crm"],
+    ["Suggestion", "Andheri is overstaffed Tue–Thu by 1 person. Move them to Bandra weekends.", "shifts"],
+  ].filter(x => state.picked.has(x[2]) || x[2] === "attendance");
+  return `<div class="feed">${items.slice(0, limit).map(([k, t]) => `<div class="ai-card"><span class="ai-dot">AI</span><span><strong>${k}:</strong> ${t}</span></div>`).join("")}</div>`;
+};
+
+function renderScreen() {
+  const has = id => state.picked.has(id);
+  const head = (title, sub) => `<div class="main-head"><div><h2>${title}</h2><p>${sub}</p></div><span class="sample-note">Sample data</span></div>`;
+  let html = "";
+  if (screen === "home") {
+    html = head(`Good morning, ${esc(state.company)}`, "Friday 21 November · 3 branches") +
+      `<div class="kpis">
+        <div class="kpi"><div class="k">Present today</div><div class="v">42 / 48</div><div class="d up">87.5% · 7-day avg 90.6%</div></div>
+        <div class="kpi"><div class="k">Late arrivals</div><div class="v">5</div><div class="d down">+2 vs usual Friday</div></div>
+        ${has("crm") ? '<div class="kpi"><div class="k">Open pipeline</div><div class="v">₹18.6L</div><div class="d up">+₹2.1L this week</div></div>' : ""}
+        ${has("checklists") ? '<div class="kpi"><div class="k">Checklists done</div><div class="v">11 / 12</div><div class="d down">Powai closing pending</div></div>' : ""}
+        ${has("tasks") ? '<div class="kpi"><div class="k">Tasks due today</div><div class="v">9</div><div class="d down">2 overdue</div></div>' : ""}
+        ${has("inventory") ? '<div class="kpi"><div class="k">Low-stock items</div><div class="v">6</div><div class="d down">Bandra needs reorder</div></div>' : ""}
+      </div>
+      <div class="row2"><div class="panel"><h3>Attendance, last 7 days</h3>${weekChart()}</div>
+      <div class="panel"><h3>${has("ai") ? "AI advisor" : "Alerts"}</h3>${has("ai") ? aiFeed(3) : '<p style="color:var(--ink-2)">Switch on the AI advisor to get mistakes, predictions and suggestions here.</p><button class="btn sm" style="margin-top:12px" data-enable="ai">Try AI advisor free</button>'}</div></div>
+      <div class="panel"><h3>Today's check-ins</h3>${attendanceTable(PEOPLE.slice(0, 5))}</div>`;
+  } else if (screen === "attendance") {
+    html = head("Attendance", "Live check-ins · geofenced to each branch") +
+      `<div class="kpis"><div class="kpi"><div class="k">Present</div><div class="v">42</div></div><div class="kpi"><div class="k">Late</div><div class="v">5</div></div><div class="kpi"><div class="k">Absent</div><div class="v">4</div></div><div class="kpi"><div class="k">On leave</div><div class="v">2</div></div></div>
+      <div class="panel"><h3>Last 7 days</h3>${weekChart()}</div><div class="panel"><h3>Today</h3>${attendanceTable()}</div>`;
+  } else if (screen === "employees") {
+    html = head("Employees", "48 people across 3 branches and field sales") +
+      `<div class="panel"><div class="tbl-wrap"><table><thead><tr><th>Name</th><th>Role</th><th>Branch</th><th>Joined</th></tr></thead><tbody>
+      ${PEOPLE.map(([n, b], i) => `<tr><td>${n}</td><td>${["Store manager", "Sales associate", "Field executive", "Cashier"][i % 4]}</td><td>${b}</td><td class="num">${["Mar 2023", "Jul 2024", "Jan 2025", "Oct 2022"][i % 4]}</td></tr>`).join("")}</tbody></table></div></div>`;
+  } else if (screen === "crm") {
+    const cols = [["New", [["Hotel Sea Breeze", "₹1.2L"], ["Dr. Rao Clinic", "₹45,000"]]], ["Contacted", [["Patel Caterers", "₹2.4L"], ["Bluewave Gym", "₹80,000"]]], ["Quote sent", [["Orchid School", "₹5.6L"], ["Kiran Motors", "₹3.1L"]]], ["Won", [["Green Leaf Cafe", "₹1.9L"]]]];
+    html = head("CRM", "Pipeline ₹18.6L · 12 leads need follow-up") +
+      `<div class="kanban">${cols.map(([c, ds]) => `<div class="col"><h4>${c}<span class="mono">${ds.length}</span></h4>${ds.map(([n, a]) => `<div class="deal"><b>${n}</b><span class="amt">${a}</span></div>`).join("")}</div>`).join("")}</div>`;
+  } else if (screen === "tasks" || screen === "checklists") {
+    const items = screen === "tasks" ? ["Call Orchid School about revised quote", "Submit November GST data to accountant", "Fix Bandra billing printer", "Train 2 new cashiers on returns", "Approve Powai Diwali display"] :
+      ["Lights and AC on, shutter fully open", "Cash drawer counted: ₹5,000 float", "Fridges at 2–5 °C", "Floor cleaned and dry", "Closing: stock count of top 20 items"];
+    html = head(SCREENS[screen].name, screen === "tasks" ? "9 due today · 2 overdue" : "Powai store · Today") +
+      `<div class="panel checklist">${items.map((t, i) => `<label class="check${i < 2 ? " done" : ""}" for="chk-${screen}-${i}"><input type="checkbox" id="chk-${screen}-${i}"${i < 2 ? " checked" : ""}><span>${t}</span></label>`).join("")}</div>`;
+  } else if (screen === "ai") {
+    html = head("AI advisor", "Reads every module you have switched on") +
+      `<div class="panel"><h3>This week</h3>${aiFeed(5)}</div>
+       <div class="panel"><h3>Ask anything</h3><div class="ask" style="margin-top:0"><div class="ask-q">Which branch needs attention this month?</div>
+       <div class="ask-a"><b>Powai.</b> Attendance is fine (93%), but the closing checklist was skipped 4 times and stock variance rose 18% on those days. Making the checklist mandatory before checkout should fix most of it.</div></div></div>`;
+  } else {
+    const m = MODS[screen];
+    html = head(m.name, m.desc) + `<div class="panel empty-mod"><h3>${m.name} is switched on</h3><p style="color:var(--ink-2)">This screen is part of the full product. In the preview, the Home, Attendance, CRM, Tasks, Checklists and AI screens are interactive.</p></div>`;
+  }
+  $("#main").innerHTML = html;
+}
+function renderPortal() {
+  const groups = CATS.map(c => ({ c, mods: c.mods.filter(m => state.picked.has(m.id)) })).filter(g => g.mods.length);
+  $("#side").innerHTML = `<button type="button" data-screen="home" class="${screen === "home" ? "on" : ""}">Home</button>` +
+    groups.map(g => `<div class="grp">${g.c.name}</div>` + g.mods.map(m => `<button type="button" data-screen="${m.id}" class="${screen === m.id ? "on" : ""}${m.ai ? " ai-link" : ""}">${m.name}${m.soon ? ' <span class="chip late">Soon</span>' : ""}</button>`).join("")).join("") +
+    `<button type="button" class="add" id="add-mods">+ Add modules</button>`;
+  if (screen !== "home" && !state.picked.has(screen)) screen = "home";
+  renderScreen();
+}
+$("#side").addEventListener("click", e => {
+  if (e.target.closest("#add-mods")) { location.hash = "home"; setTimeout(() => document.getElementById("modules").scrollIntoView({ behavior: "smooth" })); return; }
+  const b = e.target.closest("[data-screen]"); if (!b) return;
+  screen = b.dataset.screen; renderPortal(); $("#main").scrollIntoView({ block: "start" });
+});
+$("#main").addEventListener("click", e => {
+  const en = e.target.closest("[data-enable]");
+  if (en) { state.picked.add(en.dataset.enable); syncPicker(); renderPortal(); toast("AI advisor added · 14-day free trial"); }
+  const ck = e.target.closest(".check input");
+  if (ck) ck.closest(".check").classList.toggle("done", ck.checked);
+});
+
+// ---------- routing & theme ----------
+function show(page) {
+  state.page = page;
+  ["home", "signup", "portal"].forEach(p => ($("#view-" + p).hidden = p !== page));
+  if (page === "signup") setStep(1);
+  if (page === "portal") renderPortal();
+  if (page !== "home") window.scrollTo(0, 0);
+}
+function route() { const h = location.hash.slice(1); show(["signup", "portal"].includes(h) ? h : "home"); }
+window.addEventListener("hashchange", route);
+$("#theme").addEventListener("click", () => {
+  const dark = getComputedStyle(document.documentElement).colorScheme.includes("dark");
+  document.documentElement.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("cse-theme", document.documentElement.dataset.theme); } catch {}
+});
+try { const t = localStorage.getItem("cse-theme"); if (t) document.documentElement.dataset.theme = t; } catch {}
+
+renderCats($("#cats"));
+syncPicker();
+route();
+</script>
