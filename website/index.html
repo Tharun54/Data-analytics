@@ -316,7 +316,7 @@ td.num { font-variant-numeric: tabular-nums; font-family: var(--f-mono); font-si
   </section>
 
   <div class="strip"><div class="wrap">
-    <span><b>30</b>modules in 6 categories</span>
+    <span><b>36</b>modules in 7 categories</span>
     <span><b>+ Custom</b>software and AI built by our team</span>
     <span><b>1</b>login for owner, managers and staff</span>
     <span><b>GPS · selfie · QR</b>check-in</span>
@@ -509,12 +509,19 @@ const CATS = [
   { id: "sales", name: "Sales & customers", hint: "revenue", mods: [
     { id: "crm", name: "CRM", desc: "Leads, pipeline, follow-ups", price: 30 },
     { id: "visits", name: "Field visits", desc: "Visit plans, check-ins at client sites", price: 20 },
-    { id: "invoices", name: "Quotes & invoices", desc: "GST-ready quotes and invoices", price: 20 },
+    { id: "invoices", name: "Quotes", desc: "Quotes and proformas; turn them into GST invoices", price: 10 },
     { id: "tickets", name: "Support tickets", desc: "Complaints and service requests", price: 20 } ] },
   { id: "data", name: "Data", hint: "your own records", mods: [
     { id: "customdb", name: "Custom database", desc: "Build your own tables and forms", price: 25 },
     { id: "reports", name: "Reports & dashboards", desc: "Charts across every module", price: 15 },
     { id: "import", name: "Data import", desc: "Bring data from Excel or Tally", price: 0 } ] },
+  { id: "billing", name: "Billing & accounts", hint: "sell, collect, file GST", mods: [
+    { id: "pos", name: "POS billing", desc: "Fast counter billing, barcode, thermal print", price: 15 },
+    { id: "gstinv", name: "GST invoices", desc: "B2B and B2C invoices, e-invoice, e-way bill", price: 15 },
+    { id: "payments", name: "Payments & UPI", desc: "UPI QR on every bill, payment links, auto-matching", price: 8 },
+    { id: "purchases", name: "Purchases & vendors", desc: "Purchase bills, vendor dues and payments", price: 8 },
+    { id: "khata", name: "Credit & khata", desc: "Customer credit, due reminders on WhatsApp", price: 6 },
+    { id: "accounts", name: "Accounts & GST returns", desc: "Ledgers, profit and loss, GSTR-1 and 3B data, Tally export", price: 12 } ] },
   { id: "edu", name: "Education", hint: "schools, colleges, coaching", mods: [
     { id: "students", name: "Students & admissions", desc: "Enquiries, admissions, student records", price: 8 },
     { id: "studentatt", name: "Student attendance", desc: "Class-wise roll call, absent alerts to parents", price: 6 },
@@ -531,8 +538,9 @@ const CATS = [
 ];
 const MODS = Object.fromEntries(CATS.flatMap(c => c.mods.map(m => [m.id, { ...m, cat: c.id }])));
 const PRESETS = {
-  retail: { name: "Retail & restaurants", mods: ["employees", "attendance", "shifts", "leave", "checklists", "inventory", "tasks", "ai"] },
-  field: { name: "Field sales & service", mods: ["employees", "attendance", "leave", "visits", "crm", "invoices", "expenses", "ai"] },
+  retail: { name: "Retail & restaurants", mods: ["employees", "attendance", "shifts", "leave", "checklists", "inventory", "pos", "payments", "khata", "ai"] },
+  shops: { name: "Shops & distributors", mods: ["employees", "attendance", "pos", "gstinv", "payments", "purchases", "khata", "accounts", "inventory", "ai"] },
+  field: { name: "Field sales & service", mods: ["employees", "attendance", "leave", "visits", "crm", "invoices", "gstinv", "payments", "expenses", "ai"] },
   clinic: { name: "Clinics & healthcare", mods: ["employees", "attendance", "shifts", "leave", "tickets", "crm", "ai"] },
   office: { name: "Offices & agencies", mods: ["employees", "attendance", "leave", "tasks", "approvals", "crm", "performance", "ai"] },
   factory: { name: "Factories & workshops", mods: ["employees", "attendance", "shifts", "leave", "inventory", "assets", "checklists", "ai"] },
@@ -632,6 +640,27 @@ const SCREENS = {
   tasks: { name: "Tasks" }, checklists: { name: "Daily checklists" }, ai: { name: "AI advisor" },
 };
 let screen = "home";
+// sample billing counter: [name, price before GST, GST %]
+const ITEMS = [["Basmati rice 5 kg", 640, 5], ["Cooking oil 1 L", 165, 5], ["Detergent 2 kg", 380, 18], ["Biscuits pack", 30, 18], ["Toothpaste 150 g", 110, 18], ["Milk 1 L", 62, 0]];
+const BILL0 = [[0, 1], [2, 1], [3, 2]];
+let bill = BILL0.map(r => [...r]);
+function billCalc() {
+  let sub = 0, gst = 0;
+  bill.forEach(([i, q]) => { const [, p, r] = ITEMS[i]; sub += p * q; gst += p * q * r / 100; });
+  const exact = sub + gst, total = Math.round(exact);
+  return { sub, gst, total, round: total - exact };
+}
+const money = n => "₹" + n.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+function upiQr() {
+  let seed = 7; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+  const n = 21, cells = [];
+  const finder = (x, y) => [[x, y, 7], [x + 1, y + 1, 5], [x + 2, y + 2, 3]].map(([a, b, s], k) => `<rect x="${a}" y="${b}" width="${s}" height="${s}" fill="${k === 1 ? "var(--surface)" : "var(--ink)"}"/>`).join("");
+  for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+    const inF = (x < 8 && y < 8) || (x > 12 && y < 8) || (x < 8 && y > 12);
+    if (!inF && rnd() > 0.5) cells.push(`<rect x="${x}" y="${y}" width="1" height="1" fill="var(--ink)"/>`);
+  }
+  return `<svg viewBox="-1 -1 23 23" width="120" height="120" role="img" aria-label="Sample UPI QR code" style="background:var(--surface);border-radius:8px">${cells.join("")}${finder(0, 0)}${finder(14, 0)}${finder(0, 14)}</svg>`;
+}
 const statusChip = s => ({ ok: '<span class="chip ok">On time</span>', late: '<span class="chip late">Late</span>', abs: '<span class="chip abs">Absent</span>', leave: '<span class="chip">On leave</span>' }[s]);
 
 function weekChart() {
@@ -654,6 +683,7 @@ const aiFeed = (limit) => {
     ["Prediction", "Bandra will be 2 people short this Saturday based on leave patterns.", "shifts"],
     ["People risk", "Arjun M. late 7 of the last 10 days, up from once a month.", "attendance"],
     ["Sales", "12 leads with no follow-up for 5+ days; ₹3.4L pipeline at risk.", "crm"],
+    ["Billing", "₹1.2L of customer credit is older than 30 days across 18 customers; 5 of them paid late last month too.", "khata"],
     ["Suggestion", "Andheri is overstaffed Tue–Thu by 1 person. Move them to Bandra weekends.", "shifts"],
   ].filter(x => state.picked.has(x[2]) || x[2] === "attendance");
   return `<div class="feed">${items.slice(0, limit).map(([k, t]) => `<div class="ai-card"><span class="ai-dot">AI</span><span><strong>${k}:</strong> ${t}</span></div>`).join("")}</div>`;
@@ -715,6 +745,27 @@ function renderScreen() {
       ["Lights and AC on, shutter fully open", "Cash drawer counted: ₹5,000 float", "Fridges at 2–5 °C", "Floor cleaned and dry", "Closing: stock count of top 20 items"];
     html = head(SCREENS[screen].name, screen === "tasks" ? "9 due today · 2 overdue" : "Powai store · Today") +
       `<div class="panel checklist">${items.map((t, i) => `<label class="check${i < 2 ? " done" : ""}" for="chk-${screen}-${i}"><input type="checkbox" id="chk-${screen}-${i}"${i < 2 ? " checked" : ""}><span>${t}</span></label>`).join("")}</div>`;
+  } else if (screen === "pos" || screen === "gstinv") {
+    const c = billCalc();
+    html = head(screen === "pos" ? "Billing counter" : "GST invoices", "Andheri store · Counter 1 · GSTIN 27ABCDE1234F1Z5 (sample)") +
+      `<div class="row2"><div class="panel"><h3>Tap an item to add it</h3>
+        <div class="svc-chips" style="margin-bottom:14px">${ITEMS.map((it, i) => `<button type="button" class="svc-chip" data-item="${i}">${it[0]} · ${inr(it[1])}</button>`).join("")}</div>
+        <div class="tbl-wrap"><table><thead><tr><th>Item</th><th>Qty</th><th>Rate</th><th>GST</th><th>Amount</th><th></th></tr></thead><tbody>
+        ${bill.map(([i, q], k) => `<tr><td>${ITEMS[i][0]}</td><td class="num">${q}</td><td class="num">${money(ITEMS[i][1])}</td><td class="num">${ITEMS[i][2]}%</td><td class="num">${money(ITEMS[i][1] * q)}</td><td><button type="button" class="btn ghost sm" data-remove-line="${k}" aria-label="Remove ${ITEMS[i][0]}">−</button></td></tr>`).join("") || '<tr><td colspan="6" style="color:var(--muted)">No items yet. Tap an item above.</td></tr>'}
+        </tbody></table></div></div>
+      <div class="panel" style="display:grid;gap:10px;align-content:start"><h3 style="margin:0">Invoice INV-2611-0418</h3>
+        <div class="tbl-wrap"><table><tbody>
+          <tr><td>Taxable value</td><td class="num" style="text-align:right">${money(c.sub)}</td></tr>
+          <tr><td>CGST</td><td class="num" style="text-align:right">${money(c.gst / 2)}</td></tr>
+          <tr><td>SGST</td><td class="num" style="text-align:right">${money(c.gst / 2)}</td></tr>
+          <tr><td>Round off</td><td class="num" style="text-align:right">${money(c.round)}</td></tr>
+          <tr><td><b>Total</b></td><td class="num" style="text-align:right;font-size:1.1rem"><b>${money(c.total)}</b></td></tr>
+        </tbody></table></div>
+        <div style="display:flex;gap:14px;align-items:center">${upiQr()}<p style="color:var(--ink-2);font-size:.9rem">Customer scans to pay by UPI. The payment is matched to this bill automatically.</p></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn sm" data-bill-done>Save bill</button><button type="button" class="btn ghost sm" data-bill-wa>Send on WhatsApp</button><button type="button" class="btn ghost sm" data-bill-clear>New bill</button></div></div></div>
+      <div class="panel"><h3>Today's bills</h3><div class="tbl-wrap"><table><thead><tr><th>Invoice</th><th>Time</th><th>Customer</th><th>Paid by</th><th>Amount</th></tr></thead><tbody>
+        ${[["INV-2611-0417", "11:42", "Walk-in", "UPI", 1284], ["INV-2611-0416", "11:30", "Mehta Traders (B2B)", "Credit · 15 days", 18650], ["INV-2611-0415", "11:12", "Walk-in", "Cash", 436], ["INV-2611-0414", "10:58", "Walk-in", "Card", 2210]].map(([n, t, cu, pb, a]) => `<tr><td class="num">${n}</td><td class="num">${t}</td><td>${cu}</td><td>${pb.startsWith("Credit") ? `<span class="chip late">${pb}</span>` : `<span class="chip ok">${pb}</span>`}</td><td class="num">${money(a)}</td></tr>`).join("")}
+      </tbody></table></div></div>`;
   } else if (screen === "ai") {
     html = head("AI advisor", "Reads every module you have switched on") +
       `<div class="panel"><h3>This week</h3>${aiFeed(5)}</div>
@@ -742,6 +793,13 @@ $("#side").addEventListener("click", e => {
 $("#main").addEventListener("click", e => {
   const en = e.target.closest("[data-enable]");
   if (en) { state.picked.add(en.dataset.enable); syncPicker(); renderPortal(); toast("AI advisor added · 14-day free trial"); }
+  const it = e.target.closest("[data-item]");
+  if (it) { const i = +it.dataset.item, row = bill.find(r => r[0] === i); row ? row[1]++ : bill.push([i, 1]); renderScreen(); return; }
+  const rl = e.target.closest("[data-remove-line]");
+  if (rl) { const k = +rl.dataset.removeLine; bill[k][1] > 1 ? bill[k][1]-- : bill.splice(k, 1); renderScreen(); return; }
+  if (e.target.closest("[data-bill-clear]")) { bill = []; renderScreen(); return; }
+  if (e.target.closest("[data-bill-done]")) { toast(`Preview: bill of ${money(billCalc().total)} would be saved and stock updated`); return; }
+  if (e.target.closest("[data-bill-wa]")) { toast("Preview: the PDF invoice would go to the customer on WhatsApp"); return; }
   const ck = e.target.closest(".check input");
   if (ck) ck.closest(".check").classList.toggle("done", ck.checked);
 });
