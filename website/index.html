@@ -1,4 +1,4 @@
-<title>CSE Plus</title>
+<title>Creative Sky Tech</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
@@ -52,7 +52,7 @@ button, input, select { font: inherit; color: inherit; }
 .eyebrow { font: 600 0.75rem/1 var(--f-body); letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
 .lede { font-size: 1.15rem; color: var(--ink-2); max-width: 60ch; }
 .mono { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
-.btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 999px; border: 1px solid transparent; font-weight: 600; cursor: pointer; text-decoration: none; background: var(--accent); color: var(--accent-ink); transition: transform .15s; }
+.btn { white-space: nowrap; display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 999px; border: 1px solid transparent; font-weight: 600; cursor: pointer; text-decoration: none; background: var(--accent); color: var(--accent-ink); transition: transform .15s; }
 .btn:hover { transform: translateY(-1px); }
 .btn.ghost { background: transparent; color: var(--ink); border-color: var(--line); }
 .btn.sm { padding: 7px 14px; font-size: 0.9rem; }
@@ -60,8 +60,8 @@ button, input, select { font: inherit; color: inherit; }
 /* header */
 .top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 9; background: color-mix(in srgb, var(--surface) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
 .top .wrap { display: flex; align-items: center; gap: 24px; padding-block: 12px; }
-.brand { display: flex; align-items: center; gap: 10px; font: 800 1.2rem var(--f-display); text-decoration: none; }
-.mark { width: 30px; height: 30px; border-radius: 9px; background: var(--ink); color: var(--bg); display: grid; place-items: center; font-size: 0.85rem; }
+.brand { white-space: nowrap; display: flex; align-items: center; gap: 10px; font: 800 1.2rem var(--f-display); text-decoration: none; }
+.mark { min-width: 40px; height: 30px; padding: 0 6px; border-radius: 9px; background: var(--ink); color: var(--bg); display: grid; place-items: center; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.04em; }
 .links { display: flex; gap: 22px; flex: 1; }
 .links a { text-decoration: none; color: var(--ink-2); font-weight: 500; }
 .links a:hover { color: var(--ink); }
@@ -264,12 +264,13 @@ td.num { font-variant-numeric: tabular-nums; font-family: var(--f-mono); font-si
   .top-actions .ghost { display: none; }
   section.band { padding-block: 56px; }
 }
+@media (max-width: 480px) { .brand-name { font-size: 1rem; } .top .btn.sm { padding: 7px 12px; } }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 </style>
 
 <header class="top">
   <div class="wrap">
-    <a class="brand" href="#home"><span class="mark">C+</span>CSE Plus</a>
+    <a class="brand" href="#home"><span class="mark">CST</span><span class="brand-name">Creative Sky Tech</span></a>
     <nav class="links" id="links">
       <a href="#home" data-scroll="modules">Modules</a>
       <a href="#home" data-scroll="ai">AI advisor</a>
@@ -291,7 +292,7 @@ td.num { font-variant-numeric: tabular-nums; font-family: var(--f-mono); font-si
       <div>
         <p class="eyebrow">One portal for the whole business</p>
         <h1 style="margin-top:14px">Attendance, sales, daily ops and an <em>AI advisor</em>. Switch on only what you need.</h1>
-        <p class="lede">CSE Plus gives every company its own portal. Pick modules at signup, add more the day you need them, and get a weekly AI report on what is going wrong and what to do next.</p>
+        <p class="lede">Creative Sky Tech gives every company its own portal. Pick modules at signup, add more the day you need them, and get a weekly AI report on what is going wrong and what to do next.</p>
         <div class="cta">
           <a class="btn" href="#signup">Build my portal</a>
           <a class="btn ghost" href="#portal">See the live demo</a>
@@ -399,7 +400,7 @@ td.num { font-variant-numeric: tabular-nums; font-family: var(--f-mono); font-si
       <div class="sec-head">
         <p class="eyebrow">Services · built by our team</p>
         <h2>Need something the portal doesn't do? We build it for you.</h2>
-        <p class="lede">Our in-house team designs and builds software, websites, bots and AI around your exact requirements. Anything we build can plug into your CSE Plus portal, so it shares the same login, data and AI advisor.</p>
+        <p class="lede">Our in-house team designs and builds software, websites, bots and AI around your exact requirements. Anything we build can plug into your Creative Sky Tech portal, so it shares the same login, data and AI advisor.</p>
       </div>
       <div class="svc-grid">
         <article class="svc"><span class="tag">Software</span><h3>Custom software development</h3><p>Web apps, mobile apps and internal tools made for how your business works.</p><ul><li>Android and iPhone apps</li><li>Custom ERP, billing or booking systems</li><li>Connect Tally, Zoho, Shopify, banks</li></ul><span class="time">Typical: 4–16 weeks</span></article>
@@ -445,7 +446,7 @@ td.num { font-variant-numeric: tabular-nums; font-family: var(--f-mono); font-si
     </div>
   </section>
 
-  <footer><div class="wrap"><span>© 2026 CSE Plus · Preview build. Figures on this page are sample data.</span><span>Portal for teams of 5 to 500 · Custom software and AI services by our team</span></div></footer>
+  <footer><div class="wrap"><span>© 2026 Creative Sky Tech (CST) · creativeskytech.in · Preview build. Figures on this page are sample data.</span><span>Portal for teams of 5 to 500 · Custom software and AI services by our team</span></div></footer>
 </main>
 
 <main id="view-signup" hidden>
