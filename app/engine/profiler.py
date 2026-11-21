@@ -98,12 +98,14 @@ def build_report(name: str, columns: list[str], rows: list[dict], prof: dict) ->
                 continue
             k = d.strftime(key_fmt)
             b = buckets.setdefault(k, {})
-            for n in numeric[:3]:
+            for n in numeric[:2]:
                 b[n] = b.get(n, 0.0) + (_to_number(r[n]) or 0.0)
         labels = sorted(buckets)[-60:]
-        charts.append({"type": "line", "title": f"{', '.join(numeric[:3])} over time", "labels": labels,
-                       "series": [{"name": n, "data": [round(buckets[k].get(n, 0.0), 2) for k in labels]} for n in numeric[:3]],
-                       "insight": f"Aggregated by {'month' if key_fmt == '%Y-%m' else 'day'} on '{dcol}'."})
+        # One chart per measure: measures of different scale never share an axis.
+        for n in numeric[:2]:
+            charts.append({"type": "line", "title": f"{n} over time", "labels": labels,
+                           "series": [{"name": n, "data": [round(buckets[k].get(n, 0.0), 2) for k in labels]}],
+                           "insight": f"Sum of '{n}' by {'month' if key_fmt == '%Y-%m' else 'day'} on '{dcol}'."})
     # Category breakdowns: sum of first numeric per category (or counts).
     for cat in cats[:2]:
         agg: Counter = Counter()
