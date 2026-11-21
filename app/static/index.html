@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CSE Plus</title>
+  <meta name="description" content="CSE Plus — analysis on any topic, delivered as live dashboards.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css">
+  <script src="/static/vendor/chart.umd.min.js"></script>
+</head>
+<body>
+  <header class="topbar" id="topbar" hidden>
+    <a href="#/" class="brand"><span class="logo">C+</span> CSE Plus</a>
+    <nav class="nav">
+      <a href="#/" data-nav="home">Analyze</a>
+      <a href="#/dashboards" data-nav="dashboards">Dashboards</a>
+      <a href="#/datasets" data-nav="datasets">Datasets</a>
+      <a href="#/billing" data-nav="billing">Plan</a>
+    </nav>
+    <div class="topbar-right">
+      <span class="engine-pill" id="engine-pill"></span>
+      <button class="btn ghost sm" id="theme-toggle" title="Toggle theme" aria-label="Toggle theme">Theme</button>
+      <button class="btn ghost sm" id="logout">Log out</button>
+    </div>
+  </header>
+  <main id="app" class="container"></main>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="/static/app.js"></script>
+</body>
+</html>
